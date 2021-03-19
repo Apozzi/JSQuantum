@@ -16,3 +16,34 @@
     background: #3a3e48;
     cursor: pointer;
 }
+
+.navbar--button-with-subnav:hover .subnav--content {
+    display: grid !important;
+} 
+
+.subnav--content {
+    background: #34373e;
+    z-index: 999;
+    position: absolute;
+    display: none;
+    box-shadow: 0px 0px 20px black;
+}
+
+.subnav--content a {
+    color: white !important;
+    text-decoration: none;
+    padding: 5px 15px;
+    font-size: 15px;
+}
+
+.subnav--content a:hover {
+    background: #44474e;
+    cursor: pointer;
+}
+
+.navbar--arrow-icon {
+    float: left;
+    font-size: 11px;
+    margin-top: 5px;
+    margin-right: 5px;
+}

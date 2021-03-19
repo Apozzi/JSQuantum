@@ -30,24 +30,44 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
   };
 
   componentDidMount() {
+    QuantumSchematicsManager.setSize(this.state.quatumColumns);
     QuantumSchematicsManager.onClean().subscribe(() => this.onClean());
     QuantumSchematicsManager.onImport().subscribe(() => this.onImport());
     QuantumSchematicsManager.onExport().subscribe((projectName : String) => this.onExport(projectName));
+    QuantumSchematicsManager.onUpdateSchematics().subscribe(() => this.forceUpdate());
   }
 
   componentDidUpdate() {
+    QuantumSchematicsManager.setSize(this.state.quatumColumns);
     if (this.props.isPlaying) {
       const oldOutputState = [...this.state.qbitsOutput];
-      getLineOfGates().forEach((line, i) => {
-        const kenet = this.defineKenetQbitFromNumber(this.state.qbitsInputNr[i]);
-        let qubit : Qubit = SimulatorUtils.createQubitFromKenetNotation(kenet);
-        line.forEach((gates) => {
-          qubit =  SimulatorUtils.qGateTransformingByString(qubit, gates);
-        });
-        this.state.qbitsOutput[i] = qubit;
+      let lineOfGates = getLineOfGates();
+      let outputResult = this.state.qbitsInputNr.map(qinput => {
+        const kenet = this.defineKenetQbitFromNumber(qinput);
+        return SimulatorUtils.createQubitFromKenetNotation(kenet);
       });
+      while (lineOfGates.some((a) => (a.length))) {
+        const controlledGatesInColumn = lineOfGates
+          .map((gates, i) => ({gate: gates[0], index: i}))
+          .filter((obj) => obj.gate === "ControlledGateSet");
+        if (controlledGatesInColumn.length) {
+          lineOfGates.forEach((line, i) => {
+            const gate = line.shift();
+            const controlledQubits =  [];
+            for (let contr of controlledGatesInColumn) {
+              controlledQubits.push(outputResult[contr.index]);
+            }
+            if (gate) outputResult[i] = SimulatorUtils.controlledQGateTransformingByString(outputResult[i], gate, controlledQubits);
+          });
+        } else {
+          lineOfGates.forEach((line, i) => {
+            const gate = line.shift();
+            if (gate) outputResult[i] = SimulatorUtils.qGateTransformingByString(outputResult[i], gate);
+          });
+        }
+      }
+      this.state.qbitsOutput = outputResult;
       if (!_.isEqual(oldOutputState, this.state.qbitsOutput)) {
-        console.log(this.state.qbitsOutput);
         this.setState({
           qbitsOutput: this.state.qbitsOutput
         });
@@ -105,7 +125,6 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
     event.stopPropagation();
     event.preventDefault();
     var file = event.target.files[0];
-    console.log(file);
     if (file) {
       var reader = new FileReader();
       reader.readAsText(file, "UTF-8");
@@ -114,12 +133,16 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
           let parsedObj = null;
           try {
             parsedObj = JSON.parse(evt.target.result as string);
+            for (let gateObj of parsedObj) {
+              SimulatorUtils.addGateInTable(gateObj.gate, gateObj.x, gateObj.y);
+            }
           } catch {
             // Tratamento exceção.
           }
         }
       }
     }
+    event.target.value = null;
   }
 
   downloadFile(data: any, filename: any, type:any ) {
@@ -145,12 +168,54 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
     const fileArray = [];
     for ( let gateEl of gateSets) {
       fileArray.push({
-        gate: gateEl.id,
-        x: gateEl.parentElement.id.split("_")[0],
-        y: gateEl.parentElement.id.split("_")[1]
+        gate: gateEl.id.slice(0, -3),
+        x: gateEl.parentElement.id.split("_")[1],
+        y: gateEl.parentElement.id.split("_")[2]
       });
     }
     this.downloadFile(JSON.stringify(fileArray), projectName + '.qjs', 'text');
+  }
+
+  isLastRow(index: number) {
+    return this.state.quatumColumns === (index + 1);
+  }
+
+  hasControllerGateLine(rowIndex: number, columnIndex: number) : boolean {
+    const rowFinalIndex = this.state.quatumColumns - 1;
+    const checkGate = (index: number) => {
+      const tableColumn = document.getElementById(`table-box_${index}_${columnIndex}`);
+      return tableColumn && Array.from(tableColumn.children).filter(children => children.id.includes("Set")).length ? index : null;
+    };
+    const getBeginPos = () => {
+      for (let index = 0; index <= rowFinalIndex; index++) {
+        let gateChecked = checkGate(index);
+        if (gateChecked !== null) return gateChecked;
+      }
+      return rowFinalIndex;
+    };
+    const getFinalPos = () => {
+      for (let index = rowFinalIndex; index >= 0; index--) {
+        let gateChecked = checkGate(index);
+        if (gateChecked !== null) return gateChecked;
+      }
+      return 0;
+    };
+    const hasDiferentGates = () => {
+      const gateArray = [];
+      for (let index = 0; index <= rowFinalIndex; index++) {
+        const tableColumn = document.getElementById(`table-box_${index}_${columnIndex}`);
+        const arrayTableColumn = tableColumn ? Array.from(tableColumn.children) : [];
+        const gate = arrayTableColumn.filter(children => children.id.includes("Set"))[0];
+        if (gate) gateArray.push(gate);
+      }
+      const quantityOfGates = gateArray.filter(children => children.id.includes("Set")).length;
+      const quantityOfControlledGates = gateArray.filter(children => children.id.includes("ControlledGateSet")).length;
+      const quantityGatesDiferentFromControlled = gateArray.filter(children => !children.id.includes("ControlledGateSet")).length;
+      return quantityOfGates !== quantityOfControlledGates && quantityOfGates !== quantityGatesDiferentFromControlled;
+    };
+    const beginPos = getBeginPos();
+    const endPos = getFinalPos();
+    return beginPos <= rowIndex && endPos > rowIndex && hasDiferentGates();
   }
 
   render() {
@@ -169,7 +234,10 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
               </td>
               <td className="q-box table-quantum-number">Q{i + 1}</td>
               {[...Array(14)].map((x, i2) =>
-                <td id={`table-box_${i}_${i2}`} key={i2} className="table-box"><hr className="quantum-box"></hr></td>
+                <td id={`table-box_${i}_${i2}`} key={i2} className="table-box"><hr className="quantum-box">
+                  </hr>
+                  {!this.isLastRow(i) && this.hasControllerGateLine(i, i2) && <div id="controlledline" className="controlled-gate--bottom-line"></div> }
+                </td>
               )}
               <td className="table-quantum-number table-mensurement-number-box">
                 <div className="mensurement-number-box">
@@ -182,9 +250,8 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
         </table>
         <div className="change-button-box">
           <button className="change-table-button" onClick={() => this.addLine()}>+</button>
-          {(this.state.quatumColumns > 1 ? 
-           <button className="change-table-button" onClick={() => this.removeLine()}>-</button>
-           :  null)}
+          {this.state.quatumColumns > 1 && 
+           <button className="change-table-button" onClick={() => this.removeLine()}>-</button>}
         </div>
       </div>
     );

@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+.modal-content {
+  padding: 15px;
+}
+
+.modal-header {
+  background: #4b4f58;
+  padding: 16px;
+  display: flow-root;
+}
+
+.modal-close-icon {
+  font-size: 24px;
+  font-family: cursive;
+  float: right;
+  padding-right: 15px;
+  cursor: pointer;
+}
+
+.modal-title {
+  float: left;
+  font-size: 20px;
+  margin-top: 2px;
+  margin-left: 15px;
+}
