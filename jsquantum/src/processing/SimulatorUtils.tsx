@@ -89,41 +89,22 @@ export default class SimulatorUtils {
         addGateToTableObj(gateId, clone, tableobjs);
     }
 
-    public static controlledQGateTransformingByString(qubit: Qubit, gateAsStr: String, controlledQubits: Array<Qubit>) : Qubit {
+    public static qGateTransformingByString(gateAsStr: String) : number[][] {
         switch (gateAsStr) {
             case "HGateSet":
-                return QuantumLogicGateTrasform.controlU(qubit, controlledQubits, QuantumLogicGateTrasform.hadamartMatrix);
+                return QuantumLogicGateTrasform.hadamartMatrix;
             case "XGateSet":
-                return QuantumLogicGateTrasform.controlU(qubit, controlledQubits, QuantumLogicGateTrasform.pauliXMatrix);
+                return QuantumLogicGateTrasform.pauliXMatrix;
             case "YGateSet":
-                return QuantumLogicGateTrasform.controlU(qubit, controlledQubits, QuantumLogicGateTrasform.pauliYMatrix);
+                return QuantumLogicGateTrasform.pauliYMatrix;
             case "ZGateSet":
-                return QuantumLogicGateTrasform.controlU(qubit, controlledQubits, QuantumLogicGateTrasform.pauliZMatrix);
+                return QuantumLogicGateTrasform.pauliZMatrix;
             case "SGateSet":
-                return QuantumLogicGateTrasform.controlU(qubit, controlledQubits, QuantumLogicGateTrasform.phaseMatrix);
+                return QuantumLogicGateTrasform.phaseMatrix;
             case "TGateSet":
-                 return qubit;
+                 return QuantumLogicGateTrasform.identityMatrix;
             default:
-                return qubit;
-        }
-    }
-
-    public static qGateTransformingByString(qubit: Qubit, gateAsStr: String) : Qubit {
-        switch (gateAsStr) {
-            case "HGateSet":
-                return QuantumLogicGateTrasform.hadamardGate(qubit);
-            case "XGateSet":
-                return QuantumLogicGateTrasform.pauliX(qubit);
-            case "YGateSet":
-                return QuantumLogicGateTrasform.pauliY(qubit);
-            case "ZGateSet":
-                return QuantumLogicGateTrasform.pauliZ(qubit);
-            case "SGateSet":
-                return QuantumLogicGateTrasform.phase(qubit);
-            case "TGateSet":
-                 return qubit;
-            default:
-                return qubit;
+                return QuantumLogicGateTrasform.identityMatrix;
         }
     }
     
@@ -162,16 +143,34 @@ export default class SimulatorUtils {
         return new Qubit(alpha, beta);
     }
 
-    public static combinations(n: number) {
+    public static defineKenetQbitFromNumber(qbitRepresentation : number) {
+        return ['|0⟩', '|1⟩', '|+⟩', '|-⟩', '|i⟩', '|-i⟩'][qbitRepresentation];
+    }
+
+    public static binaryCombinationsString(n: number): string[] {
+        const combinations = this.binaryCombinations(n).slice(0) as any;
+        for (let combination of combinations) {
+            combination = combination.join('');
+        }
+        return combinations;  
+    }
+
+    public static binaryCombinations(n: number): number[][] {
         const r = [];
         for(let i = 0; i < (1 << n); i++) {
-          const c = [];
-          for(let j = 0; j < n; j++) {
+            const c = [];
+            for(let j = 0; j < n; j++) {
             c.push(i & (1 << j) ? 1 : 0);  
-          }
-          r.push(c.join(''));
+            }
+            r.push(c);
         }
         return r;  
-      }
+    }
+
+    public static getSpecificQubitPercentage(qbitsOutputVector: number[], totalNumberOfQubits: number, qubitIndex: number) : number {
+        const squaredValues = qbitsOutputVector.map(val => math.pow(val, 2));
+        const binaryMatrix = SimulatorUtils.binaryCombinations(totalNumberOfQubits);
+        return squaredValues.reduce((a, b, i) => a + (binaryMatrix[i][qubitIndex] ? b : 0), 0);
+    }
 
 }

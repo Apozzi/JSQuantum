@@ -66,7 +66,7 @@ export default class BlochSpheresViewModal extends React.Component<any> {
             X
           </div>
         </div>
-        {SimulatorUtils.combinations(QuantumSchematicsManager.getSize()).map((label, i) =>
+        {SimulatorUtils.binaryCombinationsString(QuantumSchematicsManager.getSize()).map((label: string, i: number) =>
               <div className="bloch-spheres-view-modal-content--qubit" key={i}>
                 <div className="bloch-spheres-view-modal--qubit">
                   {i}

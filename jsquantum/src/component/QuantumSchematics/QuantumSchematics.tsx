@@ -1,21 +1,23 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import SimulatorUtils from "../../processing/SimulatorUtils";
-import Qubit from "../../processing/Qubit";
 import _ from 'underscore';
 import './QuantumSchematics.css';
 import QuantumSchematicsManager from './QuantumSchematicsManager';
+import QuantumLogicGateTrasform from '../../processing/QuantumLogicGateTrasform';
 
 const math = require('mathjs');
 const documentobj: any = document ? document : {};
 
-const getLineOfGates = () => {
+const getColumnsOfGates = () => {
+  const length = document.querySelectorAll("[id^='table-box_0']").length;
   let gates = [];
-  for (const element of documentobj.querySelector("#quantumSchematics tbody").children) {
-    let line = [];
-    for ( const gateEl of element.getElementsByClassName("gateSet")) {
-      line.push(gateEl.id);
-    }
-    gates.push(line);
+  for (let index = 0; index < length; index++) {
+    const column : Array<any> = [];
+    document.querySelectorAll(`[id^='table-box_'][id$='_${index}']`).forEach(e => {
+      const gateEl = e.getElementsByClassName("gateSet")[0];
+      column.push(gateEl ? gateEl.id : null);
+    });
+    if (column.length !== 0) gates.push(column);
   }
   return gates;
 }
@@ -26,7 +28,7 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
   state = {
     quatumColumns: 4,
     qbitsInputNr: Array(4).fill(0),
-    qbitsOutput: Array(4).fill(0)
+    qbitsOutputVector: Array(16).fill(0),
   };
 
   componentDidMount() {
@@ -40,44 +42,25 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
   componentDidUpdate() {
     QuantumSchematicsManager.setSize(this.state.quatumColumns);
     if (this.props.isPlaying) {
-      const oldOutputState = [...this.state.qbitsOutput];
-      let lineOfGates = getLineOfGates();
-      let outputResult = this.state.qbitsInputNr.map(qinput => {
-        const kenet = this.defineKenetQbitFromNumber(qinput);
-        return SimulatorUtils.createQubitFromKenetNotation(kenet);
-      });
-      while (lineOfGates.some((a) => (a.length))) {
-        const controlledGatesInColumn = lineOfGates
-          .map((gates, i) => ({gate: gates[0], index: i}))
-          .filter((obj) => obj.gate === "ControlledGateSet");
-        if (controlledGatesInColumn.length) {
-          lineOfGates.forEach((line, i) => {
-            const gate = line.shift();
-            const controlledQubits =  [];
-            for (let contr of controlledGatesInColumn) {
-              controlledQubits.push(outputResult[contr.index]);
-            }
-            if (gate) outputResult[i] = SimulatorUtils.controlledQGateTransformingByString(outputResult[i], gate, controlledQubits);
-          });
-        } else {
-          lineOfGates.forEach((line, i) => {
-            const gate = line.shift();
-            if (gate) outputResult[i] = SimulatorUtils.qGateTransformingByString(outputResult[i], gate);
-          });
-        }
+      const oldOutputState = [...this.state.qbitsOutputVector];
+      let columnsOfGates = getColumnsOfGates();
+      let inputVector = QuantumLogicGateTrasform.createInputVectorFromQubits(this.state.qbitsInputNr.map(n => 
+        SimulatorUtils.createQubitFromKenetNotation(SimulatorUtils.defineKenetQbitFromNumber(n))
+      ));
+      for (let columnOfGates of columnsOfGates) {
+        const arrayOfTransformationMatrix = columnOfGates.map(e => SimulatorUtils.qGateTransformingByString(e));
+        inputVector = QuantumLogicGateTrasform.transform(inputVector, arrayOfTransformationMatrix);
       }
-      this.state.qbitsOutput = outputResult;
-      if (!_.isEqual(oldOutputState, this.state.qbitsOutput)) {
+      this.state.qbitsOutputVector = inputVector.flat();
+      if (!_.isEqual(oldOutputState, this.state.qbitsOutputVector)) {
         this.setState({
-          qbitsOutput: this.state.qbitsOutput
+          qbitsOutputMatrix: this.state.qbitsOutputVector
         });
       }
     }
   }
 
-  defineKenetQbitFromNumber(qbitRepresentation : number) {
-    return ['|0⟩', '|1⟩', '|+⟩', '|-⟩', '|i⟩', '|-i⟩'][qbitRepresentation];
-  }
+  
 
   changeQubitRotation(index: number) {
     this.state.qbitsInputNr[index]++;
@@ -101,9 +84,10 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
     });
   }
 
-  getMensuramentPercentage(qubit: Qubit) {
-    if (qubit) {
-      return (math.abs(math.pow(qubit.getBeta(), 2))*100).toFixed(2) + "%";
+  getMensuramentPercentageLabel(index: number) {
+    let doubleValue = SimulatorUtils.getSpecificQubitPercentage(this.state.qbitsOutputVector, this.state.quatumColumns, index);
+    if (index) {
+      return (math.abs(math.pow(doubleValue, 2))*100).toFixed(2) + "%";
     }
     return "0.00%";
   }
@@ -229,7 +213,7 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
               <tr key={i}>
               <td className="table-quantum-number">
                 <div className="qubit-simbol" onClick={() => this.changeQubitRotation(i)}>
-                  {this.defineKenetQbitFromNumber(this.state.qbitsInputNr[i])}
+                  {SimulatorUtils.defineKenetQbitFromNumber(this.state.qbitsInputNr[i])}
                 </div>
               </td>
               <td className="q-box table-quantum-number">Q{i + 1}</td>
@@ -241,7 +225,7 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
               )}
               <td className="table-quantum-number table-mensurement-number-box">
                 <div className="mensurement-number-box">
-                  {this.getMensuramentPercentage(this.state.qbitsOutput[i])}
+                  {this.getMensuramentPercentageLabel(1)}
                 </div>
               </td>
             </tr>

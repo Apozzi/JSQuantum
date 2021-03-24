@@ -56,7 +56,7 @@ export default class QubitsValuesModal extends React.Component<any> {
           </div>
         </div>
         <div className="modal-content">
-          {SimulatorUtils.combinations(QuantumSchematicsManager.getSize()).map((label, i) =>
+          {SimulatorUtils.binaryCombinationsString(QuantumSchematicsManager.getSize()).map((label: string, i: number) =>
               <div className="column--qubit" key={i}>
                 <div className="column-content--qubit">
                   |{label}⟩
