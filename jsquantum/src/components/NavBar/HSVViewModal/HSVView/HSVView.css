@@ -1,0 +1,21 @@
+.hsv-view--canvas_center {
+    text-align: center;
+    cursor: pointer;
+}
+
+.hsv-view--color_line {
+    position: fixed;
+    margin-left: 21px;
+    margin-top: calc(50vh - 328px);
+}
+
+.hsv-view--labels_color_line {
+    position: fixed;
+    margin-top: calc(50vh - 328px);
+    margin-left: 54px;
+}
+
+.hsv-view--label_color_line {
+    margin-bottom: 65px;
+    font-size: 20px;
+}
