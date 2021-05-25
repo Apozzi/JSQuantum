@@ -1,3 +1,4 @@
+import ArrayUtils from "../utils/ArrayUtils";
 import Qubit from "./Qubit";
 const math = require('mathjs');
 
@@ -21,16 +22,33 @@ export default class QuantumLogicGateTrasform {
     public static createInputVectorFromQubits(qubits: Array<Qubit>): number[][] {
         let result : number[][] = [[1]];
         qubits.forEach(qubit => {
-            result = this.tensorProduct(result, [[qubit.getAlpha()], [qubit.getBeta()]]);
+            result = this.tensorProduct([[qubit.getAlpha()], [qubit.getBeta()]], result);
         });
         return result;
     }
 
-    public static transform(inputVector: number[][], gateMatrixArray: number[][][]) : number[][] {
+    public static transform(inputVector: number[][], gateMatrixArray: number[][][], controlGatesPosition?: boolean[]) : number[][] {
         let transformationMatrix : number[][] = [[1]];
-        gateMatrixArray.reverse().forEach(gateMatrix => {
-            transformationMatrix = this.tensorProduct(transformationMatrix, gateMatrix);
-        });
+        if (gateMatrixArray.every(matrixArray => matrixArray === this.identityMatrix)) return inputVector;
+        if (controlGatesPosition) {
+            const gateMatrixLength = gateMatrixArray.length;
+            const binaryCombinations = ArrayUtils.createBinaryCombinationsArray(gateMatrixLength);
+            transformationMatrix = this.createIdentityMatrix(math.pow(2, gateMatrixLength));
+            binaryCombinations.forEach((binaryCombination: number[], index: number) => {
+                let matrixLine = [[1]];
+                const isAllControlGateActivated = binaryCombination.every((qubit, index) => !controlGatesPosition[index] || !!qubit == controlGatesPosition[index]);
+                binaryCombination.forEach((quantumBit: number, key: number) => {
+                    let qubitVector = Qubit.createFromNumber(quantumBit).toVector();
+                    if (isAllControlGateActivated) qubitVector = this.vectorByMatrixMultiplication(qubitVector, gateMatrixArray[key]);
+                    matrixLine = this.tensorProduct(qubitVector, matrixLine);
+                });
+                transformationMatrix[index] = matrixLine.flat();
+            });
+        } else {
+            gateMatrixArray.forEach(gateMatrix => {
+                transformationMatrix = this.tensorProduct(gateMatrix, transformationMatrix);
+            });
+        }
         return this.vectorByMatrixMultiplication(inputVector, transformationMatrix);
     }
 
@@ -46,10 +64,6 @@ export default class QuantumLogicGateTrasform {
         return result;
     }
 
-    private static measureQubit(qubit: Qubit) : number {
-        return math.abs(math.pow(qubit.getBeta(), 2));
-    }
-
     private static tensorProduct(q1: number[][], q2: number[][]): number[][] {
         const result : number[][] = [];
         for (let qv1 of q1) {
@@ -63,6 +77,12 @@ export default class QuantumLogicGateTrasform {
                 result.push(columnValues);
             }
         }
+        return result;
+    }
+
+    private static createIdentityMatrix(length: number): number[][] {
+        let result: number[][] = Array.from({length: length}, e => Array(length).fill(0));
+        for (let i = 0; i < length; i++) result[i][i] = 1;
         return result;
     }
 
