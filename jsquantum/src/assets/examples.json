@@ -1,0 +1,31 @@
+{ "examples": [
+    {
+      "name": "Equivalentes portas binárias",
+      "subnavs": [
+          {
+            "name": "AND Gate",
+            "data": "[{\"gate\":\"XGate\",\"x\":0,\"y\":0},{\"gate\":\"ControlGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":2,\"y\":0}]"
+          },
+          {
+            "name": "NAND Gate",
+            "data": "[{\"gate\":\"XGate\",\"x\":0,\"y\":0},{\"gate\":\"XGate\",\"x\":0,\"y\":1},{\"gate\":\"ControlGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":2,\"y\":0}]"
+          },
+          {
+            "name": "NOT Gate",
+            "data": "[{\"gate\":\"XGate\",\"x\":0,\"y\":0}]"
+          },
+          {
+            "name": "OR Gate",
+            "data": "[{\"gate\":\"XGate\",\"x\":0,\"y\":0},{\"gate\":\"XGate\",\"x\":0,\"y\":1},{\"gate\":\"XGate\",\"x\":0,\"y\":2},{\"gate\":\"ControlGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":1,\"y\":1},{\"gate\":\"ControlGate\",\"x\":2,\"y\":0},{\"gate\":\"ControlGate\",\"x\":2,\"y\":2}]"
+          },
+          {
+            "name": "XOR Gate",
+            "data": "[{\"gate\":\"XGate\",\"x\":0,\"y\":0},{\"gate\":\"XGate\",\"x\":0,\"y\":1},{\"gate\":\"ControlGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":2,\"y\":1}]"
+          }
+      ]
+    },
+    {
+        "name": "Algoritmo de Grover",
+        "data": "[{\"gate\":\"HGate\",\"x\":0,\"y\":0},{\"gate\":\"ControlGate\",\"x\":0,\"y\":2},{\"gate\":\"HGate\",\"x\":0,\"y\":4},{\"gate\":\"XGate\",\"x\":0,\"y\":5},{\"gate\":\"ControlGate\",\"x\":0,\"y\":6},{\"gate\":\"XGate\",\"x\":0,\"y\":7},{\"gate\":\"HGate\",\"x\":0,\"y\":8},{\"gate\":\"HGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":1,\"y\":2},{\"gate\":\"HGate\",\"x\":1,\"y\":4},{\"gate\":\"XGate\",\"x\":1,\"y\":5},{\"gate\":\"ZGate\",\"x\":1,\"y\":6},{\"gate\":\"XGate\",\"x\":1,\"y\":7},{\"gate\":\"HGate\",\"x\":1,\"y\":8},{\"gate\":\"HGate\",\"x\":2,\"y\":0},{\"gate\":\"XGate\",\"x\":2,\"y\":2},{\"gate\":\"HGate\",\"x\":2,\"y\":8}]"
+    }
+  ]}

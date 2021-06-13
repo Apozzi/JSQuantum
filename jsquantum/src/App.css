@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
 }
 
 .App-logo {
@@ -60,4 +63,17 @@
   font-size: 20px;
   margin-top: 2px;
   margin-left: 15px;
+}
+
+.toolbox-button {
+  height: 65px;
+  width: 65px;
+  background-color: #4b4f58;
+  color: white;
+  border: 2px solid #767676;
+  margin: 18px 11px;
+  font-size: 44px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
 }
