@@ -26,6 +26,6 @@
     },
     {
         "name": "Algoritmo de Grover",
-        "data": "[{\"gate\":\"HGate\",\"x\":0,\"y\":0},{\"gate\":\"ControlGate\",\"x\":0,\"y\":1},{\"gate\":\"HGate\",\"x\":0,\"y\":2},{\"gate\":\"XGate\",\"x\":0,\"y\":3},{\"gate\":\"ControlGate\",\"x\":0,\"y\":5},{\"gate\":\"XGate\",\"x\":0,\"y\":7},{\"gate\":\"HGate\",\"x\":0,\"y\":8},{\"gate\":\"HGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":1,\"y\":1},{\"gate\":\"HGate\",\"x\":1,\"y\":2},{\"gate\":\"XGate\",\"x\":1,\"y\":3},{\"gate\":\"HGate\",\"x\":1,\"y\":4},{\"gate\":\"XGate\",\"x\":1,\"y\":5},{\"gate\":\"HGate\",\"x\":1,\"y\":6},{\"gate\":\"XGate\",\"x\":1,\"y\":7},{\"gate\":\"HGate\",\"x\":1,\"y\":8},{\"gate\":\"HGate\",\"x\":2,\"y\":0},{\"gate\":\"XGate\",\"x\":2,\"y\":1},{\"gate\":\"HGate\",\"x\":2,\"y\":8}]"
+        "data": "[{\"gate\":\"HGate\",\"x\":0,\"y\":0},{\"gate\":\"ControlGate\",\"x\":0,\"y\":2},{\"gate\":\"HGate\",\"x\":0,\"y\":4},{\"gate\":\"XGate\",\"x\":0,\"y\":5},{\"gate\":\"ControlGate\",\"x\":0,\"y\":6},{\"gate\":\"XGate\",\"x\":0,\"y\":7},{\"gate\":\"HGate\",\"x\":0,\"y\":8},{\"gate\":\"HGate\",\"x\":1,\"y\":0},{\"gate\":\"ControlGate\",\"x\":1,\"y\":2},{\"gate\":\"HGate\",\"x\":1,\"y\":4},{\"gate\":\"XGate\",\"x\":1,\"y\":5},{\"gate\":\"ZGate\",\"x\":1,\"y\":6},{\"gate\":\"XGate\",\"x\":1,\"y\":7},{\"gate\":\"HGate\",\"x\":1,\"y\":8},{\"gate\":\"HGate\",\"x\":2,\"y\":0},{\"gate\":\"XGate\",\"x\":2,\"y\":2},{\"gate\":\"HGate\",\"x\":2,\"y\":8}]"
     }
   ]}

@@ -110,8 +110,8 @@ export default class NavBar extends React.Component<any> {
             <div className="navbar--arrow-icon">▼</div> Visualização
           </div>
           <div className="subnav--content">
-            <a onClick={() => BlochSpheresViewModal.openModal()}>Modelo de esferas de Bloch</a>
             <a onClick={() => QubitsValuesModal.openModal()}>Visualização de estados dos Qubits</a>
+            <a onClick={() => BlochSpheresViewModal.openModal()}>Modelo de esferas de Bloch</a>
             <a onClick={() => HSVViewModal.openModal()}>HSV View 2D/3D</a>
           </div>
         </div>

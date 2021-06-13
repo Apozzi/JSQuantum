@@ -52,12 +52,16 @@ export default class QuantumSchematics extends React.Component<{isPlaying : bool
     }
   }
 
+  private getQubitsVector() {
+    return this.state.qubitsInputNr.map(n => 
+      SimulatorUtils.createQubitFromKenetNotation(SimulatorUtils.defineKenetQbitFromNumber(n))
+    );
+  }
+
   private generateOutput() {
     const oldOutputState = [...this.state.qubitsOutputVector];
+    let inputVector = QuantumLogicGateTrasform.createInputVectorFromQubits(this.getQubitsVector());
     let columnsOfGates = getColumnsOfGates();
-    let inputVector = QuantumLogicGateTrasform.createInputVectorFromQubits(this.state.qubitsInputNr.map(n => 
-      SimulatorUtils.createQubitFromKenetNotation(SimulatorUtils.defineKenetQbitFromNumber(n))
-    ));
     this.state.qubitsOutputVector = this.applyGatesTransformationToInput(inputVector, columnsOfGates).flat();
     if (!_.isEqual(oldOutputState, this.state.qubitsOutputVector)) {
       this.setState({

@@ -31,25 +31,35 @@ export default class QuantumLogicGateTrasform {
         let transformationMatrix : number[][] = [[1]];
         if (gateMatrixArray.every(matrixArray => matrixArray === this.identityMatrix)) return inputVector;
         if (controlGatesPosition) {
-            const gateMatrixLength = gateMatrixArray.length;
-            const binaryCombinations = ArrayUtils.createBinaryCombinationsArray(gateMatrixLength);
-            transformationMatrix = this.createIdentityMatrix(math.pow(2, gateMatrixLength));
-            binaryCombinations.forEach((binaryCombination: number[], index: number) => {
-                let matrixLine = [[1]];
-                const isAllControlGateActivated = binaryCombination.every((qubit, index) => !controlGatesPosition[index] || !!qubit == controlGatesPosition[index]);
-                binaryCombination.forEach((quantumBit: number, key: number) => {
-                    let qubitVector = Qubit.createFromNumber(quantumBit).toVector();
-                    if (isAllControlGateActivated) qubitVector = this.vectorByMatrixMultiplication(qubitVector, gateMatrixArray[key]);
-                    matrixLine = this.tensorProduct(qubitVector, matrixLine);
-                });
-                transformationMatrix[index] = matrixLine.flat();
-            });
+            transformationMatrix = this.getTransformMatrixWithControlGates(gateMatrixArray, transformationMatrix, controlGatesPosition);
         } else {
-            gateMatrixArray.forEach(gateMatrix => {
-                transformationMatrix = this.tensorProduct(gateMatrix, transformationMatrix);
-            });
+            transformationMatrix = this.getTransformMatrixWithoutControlGates(gateMatrixArray, transformationMatrix);
         }
         return this.vectorByMatrixMultiplication(inputVector, transformationMatrix);
+    }
+
+    private static getTransformMatrixWithoutControlGates(gateMatrixArray: number[][][], transformationMatrix: number[][]) {
+        gateMatrixArray.forEach(gateMatrix => {
+            transformationMatrix = this.tensorProduct(gateMatrix, transformationMatrix);
+        });
+        return transformationMatrix;
+    }
+
+    private static getTransformMatrixWithControlGates(gateMatrixArray: number[][][], transformationMatrix: number[][], controlGatesPosition: boolean[]) {
+        const gateMatrixLength = gateMatrixArray.length;
+        const binaryCombinations = ArrayUtils.createBinaryCombinationsArray(gateMatrixLength);
+        transformationMatrix = this.createIdentityMatrix(math.pow(2, gateMatrixLength));
+        binaryCombinations.forEach((binaryCombination: number[], index: number) => {
+            let matrixLine = [[1]];
+            const isAllControlGateActivated = binaryCombination.every((qubit, index) => !controlGatesPosition[index] || !!qubit == controlGatesPosition[index]);
+            binaryCombination.forEach((quantumBit: number, key: number) => {
+                let qubitVector = Qubit.createFromNumber(quantumBit).toVector();
+                if (isAllControlGateActivated) qubitVector = this.vectorByMatrixMultiplication(qubitVector, gateMatrixArray[key]);
+                matrixLine = this.tensorProduct(qubitVector, matrixLine);
+            });
+            transformationMatrix[index] = matrixLine.flat();
+        });
+        return transformationMatrix;
     }
 
     private static vectorByMatrixMultiplication(inputVector: number[][], matrix: number[][]) : number[][] {

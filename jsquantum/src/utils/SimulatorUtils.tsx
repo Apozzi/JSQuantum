@@ -182,10 +182,14 @@ export default class SimulatorUtils {
         return combinations;  
     }
 
+    private static verifyEmpty(totalNumberOfQubits: any, qbitsOutputVector: any) {
+        return (math.pow(2, totalNumberOfQubits) !== qbitsOutputVector.length);
+    }
+
     public static getSpecificQubitPercentage(qbitsOutputVector: number[], totalNumberOfQubits: number, qubitIndex: number) : number {
+        if (this.verifyEmpty(totalNumberOfQubits, qbitsOutputVector)) return 0;
         const squaredValues = qbitsOutputVector.map(val => math.abs(math.pow(val, 2)));
         const binaryMatrix = ArrayUtils.createBinaryCombinationsArray(totalNumberOfQubits);
-        if (math.pow(2, totalNumberOfQubits) !== qbitsOutputVector.length) return 0;
         return squaredValues.reduce((a, b, i) => math.add(a, (binaryMatrix[i][qubitIndex]) ? b : 0), 0);
     }
 
