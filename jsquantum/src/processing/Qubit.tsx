@@ -1,4 +1,8 @@
 
+
+const math = require('mathjs');
+
+
 export default class Qubit {
     alpha: any;
     beta: any;
@@ -24,12 +28,5 @@ export default class Qubit {
         return this.beta;
     }
 
-    toVector() {
-        return [[this.alpha],[this.beta]];
-    }
-
-    static createFromNumber(number: number) {
-        return new Qubit(1 - number, number);
-    }
     
 }

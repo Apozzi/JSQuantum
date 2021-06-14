@@ -1,0 +1,27 @@
+.overlay {
+    position: fixed;
+    inset: 0px;
+    background-color: rgb(16 14 14 / 75%);
+    z-index: 20;
+}
+
+.bloch-sphere-view--canvas_center {
+    text-align: center;
+}
+
+div {
+    color: white;
+}
+
+.bloch-sphere-view-modal--qubit-title {
+    position: absolute;
+    margin-top: 20px;
+    left: 50px;
+    font-size: 40px;
+}
+
+.bloch-sphere-view-modal--tip {
+    position: absolute;
+    right: 50px;
+    margin-top: 20px;
+}

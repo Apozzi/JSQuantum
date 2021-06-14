@@ -13,8 +13,6 @@ code {
     monospace;
 }
 
-
-
 .default-button {
   padding: 11px 24px;
   background: #217cda;
@@ -38,17 +36,4 @@ code {
 .title {
   color: white;
   font-size: 18px;
-}
-
-.toolbox-button {
-  height: 65px;
-  width: 65px;
-  background-color: #4b4f58;
-  color: white;
-  border: 2px solid #767676;
-  margin: 18px 11px;
-  font-size: 44px;
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
 }
