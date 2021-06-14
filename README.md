@@ -6,7 +6,7 @@ Quantum Computer Simulator WebApp made with ReactJS entirely in Portuguese.
 
 With great 3D visualization models and Qubits analysis with several examples.
 
-## Bloch sphere visualization example:
+Bloch sphere visualization example:
 
 ![Demonstration](https://s6.gifyu.com/images/Animationba0b64f7bdbe1e36.gif)
 
