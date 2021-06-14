@@ -1,6 +1,6 @@
 # JSQuantum Simulator
 
-Quantum Computer Simulator WebApp entirely in Portuguese. 
+Quantum Computer Simulator in the browser entirely Portuguese. 
 
 With great 3D visualization models and Qubits analysis with several examples.
 
