@@ -1,6 +1,6 @@
 # JSQuantum Simulator
 
-Quantum Computer Simulator WebApp entirely in Portuguese. 
+Quantum Computer Simulator WebApp made with ReactJS entirely in Portuguese. 
 
 With great 3D visualization models and Qubits analysis with several examples.
 
