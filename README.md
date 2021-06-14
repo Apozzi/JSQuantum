@@ -4,7 +4,7 @@ Quantum Computer Simulator WebApp made with ReactJS entirely in Portuguese.
 
 [![algoritmo-de-grover-second-no-border.png](https://i.postimg.cc/yNCCvyBT/algoritmo-de-grover-second-no-border.png)](https://postimg.cc/SndPK8nX)
 
-With great 3D visualization models and Qubits analysis with several examples.
+With great multiple 3D visualization models (Bloch Sphere, HSV View, etc..) and Qubits analysis with several examples.
 
 Bloch sphere visualization example:
 
