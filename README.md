@@ -4,7 +4,7 @@ Quantum Computer Simulator on the browser entirely in Portuguese.
 
 With great 3D visualization models and Qubits analysis with several examples.
 
-[![algoritmo-de-grover-second-no-border.png](https://i.postimg.cc/yNCCvyBT/algoritmo-de-grover-second-no-border.png)](https://postimg.cc/SndPK8nX)
+[algoritmo-de-grover-second-no-border.png](https://postimg.cc/SndPK8nX)
 
 # Execution
 
