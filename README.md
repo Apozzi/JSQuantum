@@ -2,7 +2,7 @@
 
 Quantum Computer Simulator WebApp made with ReactJS entirely in Portuguese. 
 
-Link: https://adeveloper.com.br/jsquantum-simulator
+Link to Hosted Webapp: https://adeveloper.com.br/jsquantum-simulator
 
 [![algoritmo-de-grover-second-no-border.png](https://i.postimg.cc/yNCCvyBT/algoritmo-de-grover-second-no-border.png)](https://postimg.cc/SndPK8nX)
 
