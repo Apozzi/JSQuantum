@@ -12,11 +12,6 @@ Bloch sphere visualization example:
 
 ![Demonstration](https://s6.gifyu.com/images/Animationba0b64f7bdbe1e36.gif)
 
-# Article 
-
-https://drive.google.com/file/d/12TzcrMpY2ZR4fVcsqi-adWnYVgomEPnR/view?usp=sharing
-
-
 # Execution
 
 To run app locally just run `npm start`.
