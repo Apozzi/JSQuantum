@@ -18,4 +18,4 @@ To run app locally just run `npm start`.
 
 ## Author
 
-Anderson Pozzi (2021).
+Anderson Pozzi (2021). 
