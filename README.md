@@ -10,7 +10,7 @@ With great multiple 3D visualization models (Bloch Sphere, HSV View, etc..) and 
 
 Bloch sphere visualization example:
 
-![Demonstration](https://s6.gifyu.com/images/Animationba0b64f7bdbe1e36.gif)
+![Demonstration](https://adeveloper-image-host.s3.us-east-2.amazonaws.com/visualizacao-qubit.gif)
 
 # Execution
 
